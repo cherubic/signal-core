@@ -48,3 +48,15 @@ def test_telegram_short_message_not_split():
     short_text = "hello"
     chunks = deliverer._split(short_text)
     assert chunks == ["hello"]
+
+
+def test_telegram_raises_on_http_error(httpx_mock: HTTPXMock):
+    httpx_mock.add_response(
+        url="https://api.telegram.org/bottesttoken123/sendMessage",
+        status_code=401,
+    )
+    items = [make_summarized_item(url=f"https://ex.com/{i}") for i in range(3)]
+    digest = format_digest(items, date(2026, 5, 2))
+
+    with pytest.raises(Exception):
+        TelegramDeliverer().send(digest)

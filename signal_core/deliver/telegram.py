@@ -17,9 +17,10 @@ class TelegramDeliverer(BaseDeliverer):
         text = format_text(digest)
         url = f"https://api.telegram.org/bot{token}/sendMessage"
 
-        for chunk in self._split(text):
-            with httpx.Client(timeout=30) as client:
-                client.post(url, json={"chat_id": chat_id, "text": chunk, "parse_mode": "Markdown"})
+        with httpx.Client(timeout=30) as client:
+            for chunk in self._split(text):
+                response = client.post(url, json={"chat_id": chat_id, "text": chunk, "parse_mode": "Markdown"})
+                response.raise_for_status()
         logger.info("Telegram message sent to chat %s", chat_id)
 
     def _split(self, text: str) -> list[str]:
