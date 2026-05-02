@@ -1,4 +1,5 @@
 import json
+import os
 from unittest.mock import MagicMock, patch
 from tests.conftest import make_feed_item, make_summarized_item
 from signal_core.summarizer.deepseek import DeepseekSummarizer
@@ -14,6 +15,7 @@ def _mock_client(responses: list[str]):
     return mock
 
 
+@patch.dict(os.environ, {"DEEPSEEK_API_KEY": "test-key"})
 def test_summarize_returns_summarized_items():
     item = make_feed_item()
     summary_response = json.dumps({"summary_zh": "AI Agent的新突破。", "category": "ai_agent"})
@@ -30,6 +32,7 @@ def test_summarize_returns_summarized_items():
     assert result[0].is_top5 is False
 
 
+@patch.dict(os.environ, {"DEEPSEEK_API_KEY": "test-key"})
 def test_summarize_falls_back_on_error():
     item = make_feed_item(content="Some content here")
     mock_client = _mock_client(["invalid json {{{"])
@@ -42,6 +45,7 @@ def test_summarize_falls_back_on_error():
     assert result[0].summary_zh != ""  # fallback to content slice
 
 
+@patch.dict(os.environ, {"DEEPSEEK_API_KEY": "test-key"})
 def test_pick_top5_marks_items():
     items = [make_summarized_item(url=f"https://ex.com/{i}") for i in range(7)]
     top5_ids = [items[1].id, items[3].id, items[0].id, items[5].id, items[6].id]
@@ -59,6 +63,7 @@ def test_pick_top5_marks_items():
     assert all(item.top5_reason != "" for item in top5_items)
 
 
+@patch.dict(os.environ, {"DEEPSEEK_API_KEY": "test-key"})
 def test_pick_top5_falls_back_on_error():
     items = [make_summarized_item(url=f"https://ex.com/{i}") for i in range(7)]
     mock_client = _mock_client(["bad json"])
