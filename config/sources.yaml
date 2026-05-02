@@ -1,0 +1,111 @@
+sources:
+  # ── AI Agent ──────────────────────────────────────
+  - name: "LangChain Blog"
+    url: "https://blog.langchain.dev/rss/"
+    type: rss
+    category: ai_agent
+
+  - name: "arXiv cs.AI"
+    url: "https://rss.arxiv.org/rss/cs.AI"
+    type: rss
+    category: ai_agent
+
+  # ── LLM 应用开发 ───────────────────────────────────
+  - name: "Anthropic Blog"
+    url: "https://www.anthropic.com/rss.xml"
+    type: rss
+    category: llm_dev
+
+  - name: "Hugging Face Blog"
+    url: "https://huggingface.co/blog/feed.xml"
+    type: rss
+    category: llm_dev
+
+  - name: "OpenAI Blog"
+    url: "https://openai.com/blog/rss.xml"
+    type: rss
+    category: llm_dev
+
+  - name: "Google DeepMind Blog"
+    url: "https://deepmind.google/blog/rss.xml"
+    type: rss
+    category: llm_dev
+
+  - name: "Meta AI Blog"
+    url: "https://ai.meta.com/blog/rss/"
+    type: rss
+    category: llm_dev
+
+  - name: "Simon Willison's Blog"
+    url: "https://simonwillison.net/atom/everything/"
+    type: rss
+    category: llm_dev
+
+  - name: "量子位"
+    url: "https://www.qbitai.com/feed"
+    type: rss
+    category: llm_dev
+
+  - name: "机器之心"
+    url: "https://www.jiqizhixin.com/rss"
+    type: rss
+    category: llm_dev
+
+  # ── AI 编程工具 ────────────────────────────────────
+  - name: "GitHub Trending"
+    url: "https://github.com/trending?since=daily"
+    type: github_trending
+    category: ai_tools
+
+  - name: "HackerNews"
+    type: hackernews_api
+    category: ai_tools
+
+  # ── AI Infra ──────────────────────────────────────
+  - name: "vLLM Blog"
+    url: "https://blog.vllm.ai/feed.xml"
+    type: rss
+    category: ai_infra
+
+  - name: "Ollama Releases"
+    url: "https://github.com/ollama/ollama/releases.atom"
+    type: rss
+    category: ai_infra
+
+  - name: "美团技术博客"
+    url: "https://tech.meituan.com/feed/"
+    type: rss
+    category: ai_infra
+
+  # ── 软件工程实践 ───────────────────────────────────
+  - name: "Martin Fowler"
+    url: "https://martinfowler.com/feed.atom"
+    type: rss
+    category: swe
+
+  - name: "InfoQ"
+    url: "https://feed.infoq.com/"
+    type: rss
+    category: swe
+
+  - name: "阮一峰的网络日志"
+    url: "https://www.ruanyifeng.com/blog/atom.xml"
+    type: rss
+    category: swe
+
+  # ── 开源项目 ──────────────────────────────────────
+  - name: "开源中国"
+    url: "https://www.oschina.net/news/rss"
+    type: rss
+    category: open_source
+
+  # ── 论文研究 ──────────────────────────────────────
+  - name: "arXiv cs.LG"
+    url: "https://rss.arxiv.org/rss/cs.LG"
+    type: rss
+    category: research
+
+  - name: "arXiv cs.CL"
+    url: "https://rss.arxiv.org/rss/cs.CL"
+    type: rss
+    category: research
