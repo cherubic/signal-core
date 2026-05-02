@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from ..models import FeedItem
@@ -40,7 +40,7 @@ class Database:
         return [item for item in items if item.id not in existing]
 
     def mark_processed(self, items: list[FeedItem]) -> None:
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(timezone.utc).isoformat()
         with self._conn() as conn:
             conn.executemany(
                 "INSERT OR IGNORE INTO items (id, url, source, category, processed_at) VALUES (?, ?, ?, ?, ?)",
@@ -51,7 +51,7 @@ class Database:
         with self._conn() as conn:
             conn.execute(
                 "INSERT OR REPLACE INTO digests (date, content, created_at) VALUES (?, ?, ?)",
-                (date, content, datetime.utcnow().isoformat()),
+                (date, content, datetime.now(timezone.utc).isoformat()),
             )
 
     def get_digest(self, date: str) -> str | None:
@@ -62,6 +62,6 @@ class Database:
         return row[0] if row else None
 
     def cleanup_old(self) -> None:
-        cutoff = (datetime.utcnow() - timedelta(days=RETENTION_DAYS)).isoformat()
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=RETENTION_DAYS)).isoformat()
         with self._conn() as conn:
             conn.execute("DELETE FROM items WHERE processed_at < ?", (cutoff,))

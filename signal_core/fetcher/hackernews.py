@@ -21,6 +21,8 @@ class HackerNewsFetcher(BaseFetcher):
             items: list[FeedItem] = []
             for story_id in ids:
                 story: dict = client.get(HN_ITEM_URL.format(id=story_id)).json()
+                if not story:
+                    continue
                 url = story.get("url") or f"https://news.ycombinator.com/item?id={story_id}"
                 items.append(FeedItem(
                     id=hashlib.sha256(url.encode()).hexdigest(),

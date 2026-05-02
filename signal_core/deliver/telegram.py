@@ -19,7 +19,7 @@ class TelegramDeliverer(BaseDeliverer):
 
         with httpx.Client(timeout=30) as client:
             for chunk in self._split(text):
-                response = client.post(url, json={"chat_id": chat_id, "text": chunk, "parse_mode": "Markdown"})
+                response = client.post(url, json={"chat_id": chat_id, "text": chunk})
                 response.raise_for_status()
         logger.info("Telegram message sent to chat %s", chat_id)
 

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 import pytest
 from signal_core.models import FeedItem
@@ -53,7 +53,7 @@ def test_cleanup_removes_old_items(db: Database):
     item = _make_item("https://old.com")
     db.mark_processed([item])
     import sqlite3
-    old_date = (datetime.utcnow() - timedelta(days=31)).isoformat()
+    old_date = (datetime.now(timezone.utc) - timedelta(days=31)).isoformat()
     with sqlite3.connect(db.path) as conn:
         conn.execute("UPDATE items SET processed_at = ?", (old_date,))
     db.cleanup_old()
