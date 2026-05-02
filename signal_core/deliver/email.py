@@ -26,7 +26,7 @@ class EmailDeliverer(BaseDeliverer):
         msg.attach(MIMEText(format_text(digest), "plain", "utf-8"))
         msg.attach(MIMEText(format_html(digest), "html", "utf-8"))
 
-        with smtplib.SMTP(host, port) as server:
+        with smtplib.SMTP(host, port) as server:  # uses STARTTLS (port 587); SMTP_SSL not supported
             server.starttls()
             server.login(user, password)
             server.sendmail(user, to, msg.as_string())

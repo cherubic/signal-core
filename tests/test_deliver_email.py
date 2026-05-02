@@ -19,8 +19,7 @@ def test_email_deliverer_sends_message():
 
     with patch("signal_core.deliver.email.smtplib.SMTP") as MockSMTP:
         mock_server = MagicMock()
-        MockSMTP.return_value.__enter__ = lambda s: mock_server
-        MockSMTP.return_value.__exit__ = MagicMock(return_value=False)
+        MockSMTP.return_value.__enter__.return_value = mock_server
 
         deliverer = EmailDeliverer()
         deliverer.send(digest)
@@ -31,3 +30,6 @@ def test_email_deliverer_sends_message():
         args = mock_server.sendmail.call_args[0]
         assert args[0] == "user@example.com"
         assert args[1] == "me@example.com"
+        raw_msg = mock_server.sendmail.call_args[0][2]
+        assert "Signal_Daily" in raw_msg  # Subject header uses RFC 2047 quoted-printable encoding
+        assert "2026-05-02" in raw_msg
