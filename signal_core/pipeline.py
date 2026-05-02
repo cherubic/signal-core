@@ -25,6 +25,7 @@ def run_pipeline(
     db = Database(db_path)
     sources = load_sources(config_path)
 
+    # Stage 1: Fetch
     all_items: list[FeedItem] = []
     for source in sources:
         fetcher = _make_fetcher(source)
@@ -37,29 +38,43 @@ def run_pipeline(
         except Exception as exc:
             logger.error("Fetcher %s failed: %s", source.name, exc)
 
+    # Stage 2: Deduplicate and summarize new items
     new_items = deduplicate(all_items, db)
     logger.info("After dedup: %d new items", len(new_items))
 
-    if not new_items:
-        logger.info("No new items to process, skipping")
+    if new_items:
+        summarizer = create_summarizer()
+        summarized = summarizer.summarize(new_items)
+        summarized = summarizer.pick_top5(summarized)
+        db.mark_summarized(summarized)  # cache summaries; delivered=0
+
+    # Stage 3: Collect all pending delivery (new + previously undelivered)
+    pending = db.get_pending_delivery()
+    if not pending:
+        logger.info("No items pending delivery, skipping")
+        db.cleanup_old()
         return
 
-    summarizer = create_summarizer()
-    summarized = summarizer.summarize(new_items)
-    summarized = summarizer.pick_top5(summarized)
-
-    db.mark_processed(new_items)
-    db.cleanup_old()
-
     today = date.today()
-    digest = format_digest(summarized, today)
+    digest = format_digest(pending, today)
     db.save_digest(today.isoformat(), format_text(digest))
 
+    # Stage 4: Deliver — only mark delivered if at least one channel succeeds
+    success = 0
     for deliverer in [EmailDeliverer(), TelegramDeliverer(), FeishuDeliverer()]:
         try:
             deliverer.send(digest)
+            success += 1
         except Exception as exc:
-            logger.error("Deliverer %s failed: %s", type(deliverer).__name__, exc)
+            logger.warning("Deliverer %s failed: %s", type(deliverer).__name__, exc)
+
+    if success == 0:
+        logger.error("All delivery channels failed — will retry on next run")
+    else:
+        db.mark_delivered(pending)
+        logger.info("Delivered via %d/3 channels", success)
+
+    db.cleanup_old()
 
 
 def _make_fetcher(source):
