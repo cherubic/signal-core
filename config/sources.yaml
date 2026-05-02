@@ -1,7 +1,7 @@
 sources:
   # ── AI Agent ──────────────────────────────────────
   - name: "LangChain Blog"
-    url: "https://blog.langchain.dev/rss/"
+    url: "https://blog.langchain.dev/rss.xml"
     type: rss
     category: ai_agent
 
@@ -11,11 +11,6 @@ sources:
     category: ai_agent
 
   # ── LLM 应用开发 ───────────────────────────────────
-  - name: "Anthropic Blog"
-    url: "https://www.anthropic.com/rss.xml"
-    type: rss
-    category: llm_dev
-
   - name: "Hugging Face Blog"
     url: "https://huggingface.co/blog/feed.xml"
     type: rss
@@ -31,8 +26,8 @@ sources:
     type: rss
     category: llm_dev
 
-  - name: "Meta AI Blog"
-    url: "https://ai.meta.com/blog/rss/"
+  - name: "Meta Engineering Blog"
+    url: "https://engineering.fb.com/feed/"
     type: rss
     category: llm_dev
 
@@ -43,11 +38,6 @@ sources:
 
   - name: "量子位"
     url: "https://www.qbitai.com/feed"
-    type: rss
-    category: llm_dev
-
-  - name: "机器之心"
-    url: "https://www.jiqizhixin.com/rss"
     type: rss
     category: llm_dev
 
@@ -62,8 +52,8 @@ sources:
     category: ai_tools
 
   # ── AI Infra ──────────────────────────────────────
-  - name: "vLLM Blog"
-    url: "https://blog.vllm.ai/feed.xml"
+  - name: "vLLM Releases"
+    url: "https://github.com/vllm-project/vllm/releases.atom"
     type: rss
     category: ai_infra
 
